@@ -191,10 +191,22 @@ ${issue.description ? `\nDescription:\n${issue.description}` : ''}`
           }]
         };
       } catch (error) {
+        let errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        
+        // Add helpful message for common errors
+        if (errorMessage.includes('422')) {
+          errorMessage += '\n\nNote: This error often occurs when Redmine is not properly configured. Please ensure:\n';
+          errorMessage += '1. Trackers are defined (Admin → Trackers)\n';
+          errorMessage += '2. Issue priorities are defined (Admin → Enumerations → Issue priorities)\n';
+          errorMessage += '3. Issue statuses are defined (Admin → Issue statuses)\n';
+          errorMessage += '4. Workflows are configured (Admin → Workflow)\n';
+          errorMessage += '\nUse redmine_tracker_list, redmine_priority_list, and redmine_status_list to check available options.';
+        }
+        
         return {
           content: [{
             type: 'text',
-            text: `Error creating issue: ${error instanceof Error ? error.message : 'Unknown error'}`
+            text: `Error creating issue: ${errorMessage}`
           }]
         };
       }
