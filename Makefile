@@ -1,4 +1,4 @@
-.PHONY: up down restart logs ps clean
+.PHONY: up down restart logs ps clean init-db reset
 
 # Redmineを起動
 up:
@@ -47,6 +47,31 @@ clean:
 	@docker compose down -v
 	@echo "✅ Redmineを完全に削除しました"
 
+# デフォルトデータをロード
+init-db:
+	@echo "📊 Redmineにデフォルトデータをロードしています..."
+	@docker compose exec redmine bundle exec rake redmine:load_default_data RAILS_ENV=production REDMINE_LANG=ja
+	@echo "✅ デフォルトデータのロードが完了しました！"
+	@echo ""
+	@echo "📝 ロードされた内容:"
+	@echo "  - トラッカー: バグ、機能、サポート"
+	@echo "  - ステータス: 新規、進行中、解決、却下、終了"
+	@echo "  - 優先度: 低、通常、高、緊急、今すぐ"
+	@echo "  - ワークフロー: デフォルト設定"
+
+# データをリセットして初期化
+reset:
+	@echo "🔄 Redmineをリセットして初期化します..."
+	@$(MAKE) clean
+	@echo ""
+	@$(MAKE) up
+	@echo ""
+	@echo "⏳ データベースの準備を待っています..."
+	@sleep 20
+	@$(MAKE) init-db
+	@echo ""
+	@echo "✨ Redmineの初期化が完了しました！"
+
 # ヘルプ
 help:
 	@echo "📚 使用可能なコマンド:"
@@ -55,5 +80,7 @@ help:
 	@echo "  make restart - Redmineを再起動"
 	@echo "  make logs    - ログを表示"
 	@echo "  make ps      - コンテナの状態を表示"
+	@echo "  make init-db - デフォルトデータをロード"
+	@echo "  make reset   - データをリセットして初期化"
 	@echo "  make clean   - データを含めて完全に削除"
 	@echo "  make help    - このヘルプを表示"
