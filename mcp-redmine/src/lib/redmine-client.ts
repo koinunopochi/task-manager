@@ -32,11 +32,39 @@ export class RedmineClient {
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`Redmine API error: ${response.status} - ${error}`);
+      const errorText = await response.text();
+      let errorMessage = `Redmine API error: ${response.status}`;
+      
+      // Try to parse JSON error response
+      try {
+        const errorData = JSON.parse(errorText);
+        if (errorData.errors) {
+          errorMessage += ` - ${Array.isArray(errorData.errors) ? errorData.errors.join(', ') : errorData.errors}`;
+        } else {
+          errorMessage += ` - ${errorText}`;
+        }
+      } catch {
+        errorMessage += ` - ${errorText}`;
+      }
+      
+      throw new Error(errorMessage);
     }
 
-    return response.json() as Promise<T>;
+    // Handle empty response (204 No Content)
+    if (response.status === 204 || response.headers.get('content-length') === '0') {
+      return {} as T;
+    }
+
+    const text = await response.text();
+    if (!text) {
+      return {} as T;
+    }
+
+    try {
+      return JSON.parse(text) as T;
+    } catch (e) {
+      throw new Error(`Failed to parse JSON response: ${text}`);
+    }
   }
 
   // Project methods
