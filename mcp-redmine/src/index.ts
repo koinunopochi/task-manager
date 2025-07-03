@@ -5,12 +5,14 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprot
 import { projectTools } from './tools/projects.js';
 import { issueTools } from './tools/issues.js';
 import { metadataTools } from './tools/metadata.js';
+import { wikiTools } from './tools/wiki.js';
 
 // Combine all tools
 const allTools = {
   ...projectTools,
   ...issueTools,
-  ...metadataTools
+  ...metadataTools,
+  ...wikiTools
 };
 
 const server = new Server(

@@ -108,3 +108,24 @@ export interface User {
   lastname: string;
   mail: string;
 }
+
+export interface WikiPage {
+  title: string;
+  parent?: {
+    title: string;
+  };
+  version: number;
+  created_on: string;
+  updated_on: string;
+  author?: {
+    id: number;
+    name: string;
+  };
+  text?: string;
+  comments?: string;
+}
+
+export interface WikiPageInput {
+  text: string;
+  comments?: string;
+}

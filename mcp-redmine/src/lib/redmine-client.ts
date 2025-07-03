@@ -10,7 +10,9 @@ import {
   Tracker,
   Status,
   Priority,
-  User
+  User,
+  WikiPage,
+  WikiPageInput
 } from './types.js';
 
 export class RedmineClient {
@@ -174,5 +176,37 @@ export class RedmineClient {
   async getCurrentUser(): Promise<User> {
     const response = await this.request<{ user: User }>('/users/current.json');
     return response.user;
+  }
+
+  // Wiki methods
+  async getWikiPages(projectId: string): Promise<WikiPage[]> {
+    try {
+      const response = await this.request<{ wiki_pages: WikiPage[] }>(`/projects/${projectId}/wiki/index.json`);
+      return response.wiki_pages || [];
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('404')) {
+        return [];
+      }
+      throw error;
+    }
+  }
+
+  async getWikiPage(projectId: string, pageTitle: string, version?: number): Promise<WikiPage> {
+    const versionParam = version ? `?version=${version}` : '';
+    const response = await this.request<{ wiki_page: WikiPage }>(`/projects/${projectId}/wiki/${encodeURIComponent(pageTitle)}.json${versionParam}`);
+    return response.wiki_page;
+  }
+
+  async createOrUpdateWikiPage(projectId: string, pageTitle: string, input: WikiPageInput): Promise<void> {
+    await this.request(`/projects/${projectId}/wiki/${encodeURIComponent(pageTitle)}.json`, {
+      method: 'PUT',
+      body: JSON.stringify({ wiki_page: input }),
+    });
+  }
+
+  async deleteWikiPage(projectId: string, pageTitle: string): Promise<void> {
+    await this.request(`/projects/${projectId}/wiki/${encodeURIComponent(pageTitle)}.json`, {
+      method: 'DELETE',
+    });
   }
 }

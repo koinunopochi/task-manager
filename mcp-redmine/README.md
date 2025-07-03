@@ -25,6 +25,12 @@ Redmine integration for Model Context Protocol (MCP). This server allows Claude 
 - List users
 - Get current user info
 
+### Wiki Management
+- List wiki pages in a project
+- Get wiki page content
+- Create or update wiki pages
+- Delete wiki pages
+
 ## Installation
 
 ### Quick Start with npx (Recommended)
@@ -147,6 +153,12 @@ Add to your MCP settings file:
 - `redmine_user_list` - List users
 - `redmine_current_user` - Get current user info
 
+### Wiki
+- `redmine_wiki_list` - List wiki pages in a project
+- `redmine_wiki_get` - Get wiki page content
+- `redmine_wiki_create` - Create or update a wiki page
+- `redmine_wiki_delete` - Delete a wiki page
+
 ## Examples
 
 ### Create a Project
@@ -171,6 +183,15 @@ Use redmine_issue_create with:
 Use redmine_issue_list with:
 - project_id: 123
 - status_id: "open"
+```
+
+### Create a Wiki Page
+```
+Use redmine_wiki_create with:
+- project_id: "my-project"
+- page_title: "API Documentation"
+- text: "# API Documentation\n\nThis is the content..."
+- comments: "Initial creation"
 ```
 
 ## Development
