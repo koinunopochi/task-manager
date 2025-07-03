@@ -114,9 +114,15 @@ Create `.mcp-redmine.json` in the current directory with the same format as abov
 
 ## Usage with Claude
 
-### Using npx (Simplest)
+### Quick Setup (Recommended)
+```bash
+claude mcp add redmine npx @koinunopochi/mcp-redmine \
+  -e REDMINE_URL=http://localhost:3000 \
+  -e REDMINE_API_KEY=your-api-key-here
+```
 
-Add the server to your Claude MCP settings:
+### Manual Configuration
+Add to your MCP settings file:
 
 ```json
 {
@@ -125,44 +131,7 @@ Add the server to your Claude MCP settings:
       "command": "npx",
       "args": ["@koinunopochi/mcp-redmine"],
       "env": {
-        "REDMINE_URL": "https://your-redmine-instance.com",
-        "REDMINE_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
-```
-
-### Using Global Installation
-
-If you installed globally:
-
-```json
-{
-  "mcpServers": {
-    "redmine": {
-      "command": "mcp-redmine",
-      "env": {
-        "REDMINE_URL": "https://your-redmine-instance.com",
-        "REDMINE_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
-```
-
-### Using Local Installation
-
-For development or manual installation:
-
-```json
-{
-  "mcpServers": {
-    "redmine": {
-      "command": "node",
-      "args": ["/path/to/mcp-redmine/dist/index.js"],
-      "env": {
-        "REDMINE_URL": "https://your-redmine-instance.com",
+        "REDMINE_URL": "http://localhost:3000",
         "REDMINE_API_KEY": "your-api-key-here"
       }
     }
