@@ -5,6 +5,7 @@ Redmine integration for Model Context Protocol (MCP). This server allows Claude 
 ## Features
 
 ### Project Management
+
 - List all projects
 - Get project details
 - Create new projects
@@ -12,6 +13,7 @@ Redmine integration for Model Context Protocol (MCP). This server allows Claude 
 - Delete projects
 
 ### Issue Management
+
 - List issues (with filtering options)
 - Get issue details
 - Create new issues
@@ -19,6 +21,7 @@ Redmine integration for Model Context Protocol (MCP). This server allows Claude 
 - Delete issues
 
 ### Metadata
+
 - List trackers
 - List issue statuses
 - List issue priorities
@@ -28,23 +31,29 @@ Redmine integration for Model Context Protocol (MCP). This server allows Claude 
 ## Installation
 
 ### Quick Start with npx (Recommended)
+
 ```bash
 npx @koinunopochi/mcp-redmine
 ```
 
 ### Manual Installation
+
 1. Clone this repository
 2. Install dependencies:
+
    ```bash
    cd mcp-redmine
    npm install
    ```
+
 3. Build the project:
+
    ```bash
    npm run build
    ```
 
 ### Global Installation
+
 ```bash
 npm install -g @koinunopochi/mcp-redmine
 mcp-redmine
@@ -55,7 +64,9 @@ mcp-redmine
 The server requires Redmine URL and API key. You can configure these in several ways:
 
 ### 1. Environment Variables in MCP Settings (Recommended)
+
 Add environment variables directly in your MCP settings (`mcp.json`):
+
 ```json
 {
   "mcpServers": {
@@ -72,13 +83,16 @@ Add environment variables directly in your MCP settings (`mcp.json`):
 ```
 
 ### 2. System Environment Variables
+
 ```bash
 export REDMINE_URL="https://your-redmine-instance.com"
 export REDMINE_API_KEY="your-api-key-here"
 ```
 
 ### 3. Config File in Home Directory
+
 Create `~/.mcp-redmine.json`:
+
 ```json
 {
   "url": "https://your-redmine-instance.com",
@@ -87,6 +101,7 @@ Create `~/.mcp-redmine.json`:
 ```
 
 ### 4. Local Config File
+
 Create `.mcp-redmine.json` in the current directory with the same format as above.
 
 ## Getting Your Redmine API Key
@@ -100,6 +115,7 @@ Create `.mcp-redmine.json` in the current directory with the same format as abov
 ## Usage with Claude
 
 ### Using npx (Simplest)
+
 Add the server to your Claude MCP settings:
 
 ```json
@@ -118,6 +134,7 @@ Add the server to your Claude MCP settings:
 ```
 
 ### Using Global Installation
+
 If you installed globally:
 
 ```json
@@ -135,6 +152,7 @@ If you installed globally:
 ```
 
 ### Using Local Installation
+
 For development or manual installation:
 
 ```json
@@ -155,6 +173,7 @@ For development or manual installation:
 ## Available Tools
 
 ### Projects
+
 - `redmine_project_list` - List all projects
 - `redmine_project_get` - Get project details
 - `redmine_project_create` - Create a new project
@@ -162,6 +181,7 @@ For development or manual installation:
 - `redmine_project_delete` - Delete a project
 
 ### Issues
+
 - `redmine_issue_list` - List issues with optional filters
 - `redmine_issue_get` - Get issue details
 - `redmine_issue_create` - Create a new issue
@@ -169,6 +189,7 @@ For development or manual installation:
 - `redmine_issue_delete` - Delete an issue
 
 ### Metadata
+
 - `redmine_tracker_list` - List available trackers
 - `redmine_status_list` - List issue statuses
 - `redmine_priority_list` - List issue priorities
@@ -178,7 +199,8 @@ For development or manual installation:
 ## Examples
 
 ### Create a Project
-```
+
+```bash
 Use redmine_project_create with:
 - name: "My New Project"
 - identifier: "my-new-project"
@@ -186,7 +208,8 @@ Use redmine_project_create with:
 ```
 
 ### Create an Issue
-```
+
+```bash
 Use redmine_issue_create with:
 - project_id: 123
 - subject: "Fix bug in login system"
@@ -195,7 +218,8 @@ Use redmine_issue_create with:
 ```
 
 ### List Open Issues in a Project
-```
+
+```bash
 Use redmine_issue_list with:
 - project_id: 123
 - status_id: "open"
@@ -204,6 +228,7 @@ Use redmine_issue_list with:
 ## Development
 
 To run in development mode with auto-rebuild:
+
 ```bash
 npm run dev
 ```
@@ -211,6 +236,7 @@ npm run dev
 ## 動作確認結果と既知の問題
 
 ### ✅ 正常に動作する機能
+
 - 接続確認（current_user）
 - プロジェクト作成（project_create）
 - プロジェクト詳細取得（project_get）
@@ -221,24 +247,30 @@ npm run dev
 ### ❌ 既知の問題
 
 #### 1. チケット作成時のエラー
+
 **症状**: `redmine_issue_create`実行時に422エラーが発生
-```
+
+```bash
 {"errors":["プロジェクト を入力してください","トラッカー を入力してください","優先度 を入力してください","ステータス を入力してください"]}
 ```
 
 **原因**: Redmineサーバーの初期設定が不完全
+
 - トラッカー（Tracker）が定義されていない
 - 優先度（Priority）が定義されていない  
 - ステータス（Status）が定義されていない
 
 **対策**: Redmine管理画面での初期設定が必要
+
 1. 管理 → トラッカー → 新しいトラッカーを追加（例：バグ、機能、サポート）
 2. 管理 → 列挙項目 → 優先度を追加（例：低、標準、高、緊急）
 3. 管理 → ワークフロー → ステータスを設定（例：新規、進行中、解決済み、終了）
 
 #### 2. プロジェクト更新・削除時のエラー
+
 **症状**: `redmine_project_update`、`redmine_project_delete`実行時にJSONパースエラー
-```
+
+```bash
 Error: Unexpected end of JSON input
 ```
 
@@ -246,14 +278,17 @@ Error: Unexpected end of JSON input
 **状況**: 調査中
 
 #### 3. メタデータ取得の問題
+
 **症状**: 以下のAPIが空の結果を返す
+
 - `redmine_tracker_list`
-- `redmine_priority_list` 
+- `redmine_priority_list`
 - `redmine_status_list`
 
 **原因**: Redmineサーバーの初期設定不足と同じ
 
 ### 📋 Redmine初期設定手順
+
 新しいRedmineインスタンスで使用する場合は、以下の設定を事前に行ってください：
 
 1. **管理者ログイン**後、「管理」メニューにアクセス
@@ -275,6 +310,7 @@ Error: Unexpected end of JSON input
    - トラッカーとロールの組み合わせでステータス遷移を定義
 
 ### 🔧 トラブルシューティング
+
 - チケット作成前に必ず`redmine_tracker_list`、`redmine_priority_list`、`redmine_status_list`で利用可能なIDを確認
 - プロジェクト操作でJSONエラーが発生する場合は、Redmineサーバーのログを確認
 - API key の権限が適切か確認（管理者権限推奨）
