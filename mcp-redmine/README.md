@@ -27,6 +27,12 @@ Redmine integration for Model Context Protocol (MCP). This server allows Claude 
 
 ## Installation
 
+### Quick Start with npx (Recommended)
+```bash
+npx @koinunopochi/mcp-redmine
+```
+
+### Manual Installation
 1. Clone this repository
 2. Install dependencies:
    ```bash
@@ -37,6 +43,12 @@ Redmine integration for Model Context Protocol (MCP). This server allows Claude 
    ```bash
    npm run build
    ```
+
+### Global Installation
+```bash
+npm install -g @koinunopochi/mcp-redmine
+mcp-redmine
+```
 
 ## Configuration
 
@@ -87,7 +99,43 @@ Create `.mcp-redmine.json` in the current directory with the same format as abov
 
 ## Usage with Claude
 
+### Using npx (Simplest)
 Add the server to your Claude MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "redmine": {
+      "command": "npx",
+      "args": ["@koinunopochi/mcp-redmine"],
+      "env": {
+        "REDMINE_URL": "https://your-redmine-instance.com",
+        "REDMINE_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+### Using Global Installation
+If you installed globally:
+
+```json
+{
+  "mcpServers": {
+    "redmine": {
+      "command": "mcp-redmine",
+      "env": {
+        "REDMINE_URL": "https://your-redmine-instance.com",
+        "REDMINE_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+### Using Local Installation
+For development or manual installation:
 
 ```json
 {
