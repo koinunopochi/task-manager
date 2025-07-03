@@ -1,0 +1,39 @@
+services:
+  redmine:
+    image: redmine:5.1-alpine
+    container_name: redmine
+    ports:
+      - "${REDMINE_PORT:-3000}:3000"
+    environment:
+      REDMINE_DB_MYSQL: db
+      REDMINE_DB_USERNAME: ${DB_USER}
+      REDMINE_DB_PASSWORD: ${DB_PASSWORD}
+      REDMINE_DB_DATABASE: ${DB_NAME}
+      REDMINE_DB_ENCODING: utf8mb4
+      REDMINE_SECRET_KEY_BASE: ${REDMINE_SECRET_KEY_BASE}
+    volumes:
+      - redmine_files:/usr/src/redmine/files
+      - redmine_plugins:/usr/src/redmine/plugins
+      - redmine_themes:/usr/src/redmine/public/themes
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    container_name: redmine_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  redmine_files:
+  redmine_plugins:
+  redmine_themes:
